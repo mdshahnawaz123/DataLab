@@ -17,9 +17,6 @@ namespace DataLab
                        .Cast<RebarBarType>()
                        .OrderBy(t => t.Name)
                        .ToList();
-        }
-
-
-                        
+        }              
     }
 }
