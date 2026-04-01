@@ -11,21 +11,21 @@ namespace DataLab
 {
     public static class DocumentExtension
     {
-        public static TElement GetElementByName<TElement>(this Document doc, string name )
+        public static TElement GetElementByName<TElement>(this Document doc, string name)
             where TElement : Element
         {
             var ele = new FilteredElementCollector(doc)
                 .OfClass(typeof(TElement))
                 .FirstOrDefault(x => x.Name == name);
 
-            if( ele == null )
+            if (ele == null)
             {
                 throw new ArgumentNullException(nameof(name), $"Element with name '{name}' not found.");
             }
             return (TElement)ele;
         }
 
-        public static DirectShape CreateDirectShape(this Document doc,List<GeometryObject> geometries , ElementId categoryId)
+        public static DirectShape CreateDirectShape(this Document doc, List<GeometryObject> geometries, ElementId categoryId)
         {
             var ds = DirectShape.CreateElement(doc, categoryId);
             ds.SetShape(geometries);
@@ -36,14 +36,14 @@ namespace DataLab
         public static DirectShape CreateDirectShape(this Document doc, GeometryObject geometryObject, ElementId categoryId)
         {
             var ds = DirectShape.CreateElement(doc, new ElementId(BuiltInCategory.OST_GenericModel));
-            ds.SetShape(new List<GeometryObject>(){ geometryObject});
+            ds.SetShape(new List<GeometryObject>() { geometryObject });
 
             return ds;
         }
 
-        public static void DoAction(this Document doc, Action action,string name)
+        public static void DoAction(this Document doc, Action action, string name)
         {
-            using(var tx = new Transaction(doc,name))
+            using (var tx = new Transaction(doc, name))
             {
                 tx.Start();
                 action.Invoke();
@@ -63,7 +63,7 @@ namespace DataLab
         {
             var cat = doc.Settings.Categories
                 .Cast<Category>()
-                .Where(x =>x.CategoryType == CategoryType.Model && !x.IsTagCategory)
+                .Where(x => x.CategoryType == CategoryType.Model && !x.IsTagCategory)
                 .OrderBy(x => x.Name)
                 .ToList();
 
@@ -86,5 +86,24 @@ namespace DataLab
                 .ToList();
 
         }
+
+        public static IList<FamilyInstance> GetFamilyInstances(this Document doc)
+        {
+            return new FilteredElementCollector(doc)
+                .OfClass(typeof(FamilyInstance))
+                .WhereElementIsNotElementType()
+                .Cast<FamilyInstance>()
+                .ToList();
+        }
+
+        public static IList<Wall> GetWalls(this Document doc)
+        {
+            return new FilteredElementCollector(doc)
+                .OfClass(typeof(Wall))
+                .WhereElementIsNotElementType()
+                .Cast<Wall>()
+                .ToList();
+        }
     }
+        
 }
