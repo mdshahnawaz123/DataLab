@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Master Opening & Sleeves – BIM Digital Design | Help</title>
+  <link href="https://fonts.googleapis.com/css2?family=Artifika&family=Source+Sans+3:wght@300;400;600;700&family=Source+Code+Pro:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --adt-blue:       #006EAF;
+      --adt-blue-dark:  #004F80;
+      --adt-blue-light: #E5F2FA;
+      --adt-accent:     #0696D7;
+      --adt-warn:       #E8A000;
+      --adt-note:       #0069A3;
+      --adt-tip:        #218838;
+      --adt-danger:     #C0392B;
+      --adt-sidebar-bg: #F4F6F8;
+      --adt-border:     #D0D7DE;
+      --adt-text:       #1A2332;
+      --adt-muted:      #5A6A7A;
+      --adt-white:      #FFFFFF;
+      --adt-code-bg:    #EEF1F5;
+      --radius:         4px;
+      --shadow:         0 1px 4px rgba(0,0,0,.10);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Source Sans 3', sans-serif;
+      font-size: 15px;
+      line-height: 1.7;
+      color: var(--adt-text);
+      background: #F9FAFB;
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* ── TOP BAR ── */
+    .topbar {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      height: 48px;
+      background: var(--adt-blue-dark);
+      display: flex; align-items: center; gap: 16px;
+      padding: 0 24px;
+      box-shadow: 0 2px 6px rgba(0,0,0,.25);
+    }
+    .topbar-logo {
+      display: flex; align-items: center; gap: 10px;
+      text-decoration: none;
+    }
+    .topbar-logo svg { flex-shrink: 0; }
+    .topbar-logo span {
+      font-family: 'Artifika', serif;
+      font-size: 17px; color: #fff; letter-spacing: .02em;
+    }
+    .topbar-sep { width: 1px; height: 22px; background: rgba(255,255,255,.25); }
+    .topbar-product { color: rgba(255,255,255,.80); font-size: 13px; }
+    .topbar-search {
+      margin-left: auto;
+      display: flex; align-items: center;
+      background: rgba(255,255,255,.12);
+      border: 1px solid rgba(255,255,255,.25);
+      border-radius: 20px;
+      padding: 4px 14px; gap: 8px;
+      width: 240px;
+    }
+    .topbar-search input {
+      background: none; border: none; outline: none;
+      color: #fff; font-size: 13px; width: 100%;
+    }
+    .topbar-search input::placeholder { color: rgba(255,255,255,.55); }
+    .topbar-search svg { opacity: .7; }
+
+    /* ── SIDEBAR ── */
+    .sidebar {
+      position: fixed; top: 48px; left: 0; bottom: 0;
+      width: 260px;
+      background: var(--adt-sidebar-bg);
+      border-right: 1px solid var(--adt-border);
+      overflow-y: auto;
+      padding: 20px 0 40px;
+    }
+    .sidebar-section-label {
+      font-size: 10px; font-weight: 700; letter-spacing: .12em;
+      text-transform: uppercase; color: var(--adt-muted);
+      padding: 14px 20px 6px;
+    }
+    .sidebar a {
+      display: block;
+      padding: 6px 20px;
+      font-size: 13.5px; color: var(--adt-text);
+      text-decoration: none;
+      border-left: 3px solid transparent;
+      transition: background .15s, border-color .15s;
+    }
+    .sidebar a:hover { background: #E8EDF2; }
+    .sidebar a.active {
+      border-left-color: var(--adt-accent);
+      background: var(--adt-blue-light);
+      color: var(--adt-blue-dark);
+      font-weight: 600;
+    }
+    .sidebar a.sub { padding-left: 34px; font-size: 13px; color: var(--adt-muted); }
+    .sidebar a.sub:hover { color: var(--adt-text); }
+
+    /* ── MAIN ── */
+    .main {
+      margin-left: 260px;
+      margin-top: 48px;
+      flex: 1;
+      padding: 40px 56px 80px;
+      max-width: 960px;
+    }
+
+    /* ── BREADCRUMB ── */
+    .breadcrumb {
+      font-size: 12px; color: var(--adt-muted);
+      display: flex; align-items: center; gap: 6px;
+      margin-bottom: 24px;
+    }
+    .breadcrumb a { color: var(--adt-accent); text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    .breadcrumb span { opacity: .5; }
+
+    /* ── PAGE HEADER ── */
+    .page-header {
+      border-bottom: 2px solid var(--adt-border);
+      padding-bottom: 20px;
+      margin-bottom: 32px;
+    }
+    .page-header h1 {
+      font-family: 'Artifika', serif;
+      font-size: 28px; font-weight: 400;
+      color: var(--adt-blue-dark);
+      line-height: 1.25;
+      margin-bottom: 8px;
+    }
+    .page-header .meta {
+      font-size: 12px; color: var(--adt-muted);
+      display: flex; gap: 16px; align-items: center;
+    }
+    .badge {
+      display: inline-block;
+      background: var(--adt-blue); color: #fff;
+      font-size: 11px; font-weight: 600;
+      padding: 2px 8px; border-radius: 10px;
+      letter-spacing: .04em;
+    }
+    .badge.addon { background: #5C3D9E; }
+
+    /* ── OVERVIEW BOX ── */
+    .overview {
+      background: var(--adt-blue-light);
+      border-left: 4px solid var(--adt-accent);
+      border-radius: 0 var(--radius) var(--radius) 0;
+      padding: 16px 20px;
+      margin-bottom: 32px;
+      font-size: 14.5px;
+      line-height: 1.65;
+    }
+
+    /* ── SECTION ── */
+    .section { margin-bottom: 40px; }
+    .section h2 {
+      font-family: 'Artifika', serif;
+      font-size: 19px; font-weight: 400;
+      color: var(--adt-blue-dark);
+      margin-bottom: 14px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--adt-border);
+    }
+    .section h3 {
+      font-size: 15px; font-weight: 700;
+      color: var(--adt-text);
+      margin: 20px 0 8px;
+    }
+    .section p { margin-bottom: 12px; }
+    .section ul, .section ol {
+      margin: 0 0 14px 22px;
+    }
+    .section li { margin-bottom: 5px; }
+
+    /* ── CALLOUT BOXES ── */
+    .callout {
+      display: flex; gap: 14px;
+      border-radius: var(--radius);
+      padding: 14px 18px;
+      margin: 20px 0;
+      font-size: 14px; line-height: 1.6;
+    }
+    .callout-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+    .callout.note   { background: #E8F4FC; border: 1px solid #B3D8F0; }
+    .callout.tip    { background: #EAF7EE; border: 1px solid #A8DABA; }
+    .callout.warn   { background: #FEF7E5; border: 1px solid #F5D57A; }
+    .callout.danger { background: #FDECEA; border: 1px solid #F5B7B1; }
+    .callout strong { display: block; margin-bottom: 4px; font-size: 13px; letter-spacing: .04em; text-transform: uppercase; }
+    .callout.note   strong { color: var(--adt-note); }
+    .callout.tip    strong { color: var(--adt-tip); }
+    .callout.warn   strong { color: var(--adt-warn); }
+    .callout.danger strong { color: var(--adt-danger); }
+
+    /* ── UI REFERENCE TABLE ── */
+    .ui-table {
+      width: 100%; border-collapse: collapse;
+      font-size: 13.5px; margin: 0 0 24px;
+      box-shadow: var(--shadow);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+    .ui-table thead tr { background: var(--adt-blue-dark); color: #fff; }
+    .ui-table th {
+      padding: 10px 14px; text-align: left;
+      font-weight: 600; font-size: 12.5px; letter-spacing: .04em;
+    }
+    .ui-table td { padding: 9px 14px; border-bottom: 1px solid var(--adt-border); vertical-align: top; }
+    .ui-table tbody tr:last-child td { border-bottom: none; }
+    .ui-table tbody tr:nth-child(even) { background: #F4F7FA; }
+    .ui-label {
+      font-family: 'Source Code Pro', monospace;
+      font-size: 12.5px; font-weight: 500;
+      background: var(--adt-code-bg);
+      border: 1px solid var(--adt-border);
+      border-radius: 3px; padding: 1px 6px;
+      white-space: nowrap; color: var(--adt-blue-dark);
+    }
+
+    /* ── STEP LIST ── */
+    .steps { counter-reset: step; list-style: none; margin: 0 0 20px; padding: 0; }
+    .steps li {
+      counter-increment: step;
+      display: flex; gap: 16px; align-items: flex-start;
+      margin-bottom: 16px;
+    }
+    .steps li::before {
+      content: counter(step);
+      flex-shrink: 0;
+      width: 28px; height: 28px;
+      background: var(--adt-blue-dark); color: #fff;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 13px; font-weight: 700;
+      margin-top: 1px;
+    }
+    .steps li > div { flex: 1; padding-top: 3px; }
+
+    /* ── WORKFLOW DIAGRAM ── */
+    .workflow {
+      display: flex; align-items: center; gap: 0;
+      margin: 24px 0;
+      overflow-x: auto;
+    }
+    .wf-step {
+      flex-shrink: 0;
+      background: var(--adt-white);
+      border: 1.5px solid var(--adt-blue);
+      border-radius: 6px;
+      padding: 10px 16px;
+      text-align: center;
+      min-width: 120px;
+    }
+    .wf-step .num {
+      font-size: 10px; font-weight: 700; color: var(--adt-accent);
+      text-transform: uppercase; letter-spacing: .06em;
+    }
+    .wf-step .label { font-size: 13px; font-weight: 600; color: var(--adt-blue-dark); }
+    .wf-arrow {
+      font-size: 20px; color: var(--adt-accent);
+      padding: 0 8px; flex-shrink: 0;
+    }
+
+    /* ── SCAN SUMMARY TABLE ── */
+    .status-chip {
+      display: inline-flex; align-items: center; gap: 5px;
+      font-size: 12px; font-weight: 600; padding: 2px 10px;
+      border-radius: 20px;
+    }
+    .status-chip.pending  { background:#FEF7E5; color:#8A6000; border:1px solid #F5D57A; }
+    .status-chip.done     { background:#EAF7EE; color:#155724; border:1px solid #A8DABA; }
+    .status-chip.conflict { background:#FDECEA; color:#7B1A14; border:1px solid #F5B7B1; }
+
+    /* ── FOOTER ── */
+    .doc-footer {
+      margin-top: 48px; padding-top: 24px;
+      border-top: 1px solid var(--adt-border);
+      display: flex; justify-content: space-between; align-items: center;
+      flex-wrap: wrap; gap: 16px;
+      font-size: 12.5px; color: var(--adt-muted);
+    }
+    .doc-footer a { color: var(--adt-accent); text-decoration: none; }
+    .doc-footer a:hover { text-decoration: underline; }
+    .feedback-btns { display: flex; gap: 8px; }
+    .feedback-btns button {
+      background: none; border: 1px solid var(--adt-border);
+      border-radius: var(--radius);
+      padding: 5px 14px; font-size: 12.5px; cursor: pointer;
+      color: var(--adt-muted); transition: background .15s;
+    }
+    .feedback-btns button:hover { background: var(--adt-blue-light); color: var(--adt-blue-dark); }
+
+    /* ── SCROLL HIGHLIGHT ── */
+    :target { scroll-margin-top: 70px; }
+
+    @media (max-width: 768px) {
+      .sidebar { display: none; }
+      .main { margin-left: 0; padding: 24px 20px 60px; }
+      .topbar-search { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<header class="topbar">
+  <a class="topbar-logo" href="#">
+    <svg width="26" height="26" viewBox="0 0 26 26" fill="none">
+      <rect width="26" height="26" rx="4" fill="#0696D7"/>
+      <path d="M5 20L10.5 7L16 20M7.5 15.5H14.5" stroke="white" stroke-width="2" stroke-linecap="round"/>
+      <circle cx="19.5" cy="8.5" r="3" fill="white" fill-opacity=".9"/>
+    </svg>
+    <span></span>
+  </a>
+  <div class="topbar-sep"></div>
+  <span class="topbar-product">BIM Digital Design – Help & Learning</span>
+  <div class="topbar-search">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+    </svg>
+    <input type="text" placeholder="Search documentation…" />
+  </div>
+</header>
+
+<!-- SIDEBAR -->
+<nav class="sidebar">
+  <div class="sidebar-section-label">Getting Started</div>
+  <a href="#">Overview</a>
+  <a href="#">System Requirements</a>
+  <a href="#">Installation</a>
+
+  <div class="sidebar-section-label">Tools Reference</div>
+  <a href="#" class="active">Master Opening &amp; Sleeves</a>
+  <a href="#mep-elements" class="sub">1. MEP Elements</a>
+  <a href="#host-elements" class="sub">2. Host Elements</a>
+  <a href="#opening-settings" class="sub">3. Opening Settings</a>
+  <a href="#scan-summary" class="sub">Scan Summary</a>
+  <a href="#workflow" class="sub">Workflow</a>
+  <a href="#">Clash Detection</a>
+  <a href="#">Family Manager</a>
+
+  <div class="sidebar-section-label">Advanced</div>
+  <a href="#">Linked Model Support</a>
+  <a href="#">Batch Processing</a>
+  <a href="#">API & Dynamo</a>
+
+  <div class="sidebar-section-label">Troubleshooting</div>
+  <a href="#">Common Errors</a>
+  <a href="#">FAQ</a>
+  <a href="#">Release Notes</a>
+</nav>
+
+<!-- MAIN CONTENT -->
+<main class="main">
+
+  <!-- BREADCRUMB -->
+  <nav class="breadcrumb" aria-label="breadcrumb">
+    <a href="#">Home</a><span>›</span>
+    <a href="#">BIM Digital Design</a><span>›</span>
+    <a href="#">Tools Reference</a><span>›</span>
+    <span>Master Opening &amp; Sleeves</span>
+  </nav>
+
+  <!-- PAGE HEADER -->
+  <div class="page-header">
+    <h1>Master Opening &amp; Sleeves</h1>
+    <div class="meta">
+      <span class="badge addon">Add-in</span>
+      <span class="badge">Revit 2024 – 2026</span>
+      <span>Last updated: April 2025</span>
+    </div>
+  </div>
+
+  <!-- OVERVIEW -->
+  <div class="overview">
+    The <strong>Master Opening &amp; Sleeves</strong> tool automates the detection of clashes between MEP elements (pipes, ducts, cable trays) and structural/architectural host elements (walls, floors, ceilings, beams), and generates code-compliant openings or sleeve families at every intersection — eliminating the need for manual coordination.
+  </div>
+
+  <!-- SECTION 1: MEP ELEMENTS -->
+  <section class="section" id="mep-elements">
+    <h2>1. MEP Elements</h2>
+    <p>
+      Select which MEP categories to include in the clash scan. The tool searches both the <strong>host model</strong> and all loaded Revit links.
+    </p>
+
+    <table class="ui-table">
+      <thead>
+        <tr>
+          <th>Option</th>
+          <th>Description</th>
+          <th>Supported Families</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="ui-label">Pipes</span></td>
+          <td>Round and rectangular pipe runs including fittings and accessories.</td>
+          <td>System families, in-place, loaded families</td>
+        </tr>
+        <tr>
+          <td><span class="ui-label">Ducts</span></td>
+          <td>Rectangular, round, and oval duct segments and duct fittings.</td>
+          <td>System families, in-place, loaded families</td>
+        </tr>
+        <tr>
+          <td><span class="ui-label">Cable Trays</span></td>
+          <td>Ladder and solid-bottom cable trays and their fittings.</td>
+          <td>System families, loaded families</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="callout note">
+      <div class="callout-icon">ℹ</div>
+      <div><strong>Note</strong>
+        At least one MEP category must be selected before running <em>Scan For Clashes</em>. The status bar at the bottom of the dialog reports how many elements of each type are currently detected (e.g., <em>"Model: 3 pipe(s), 2 duct(s), 0 cable tray(s)"</em>).
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 2: HOST ELEMENTS -->
+  <section class="section" id="host-elements">
+    <h2>2. Host Elements</h2>
+    <p>
+      Host elements are the structural or architectural components that will be <strong>cut</strong> to create openings. Openings are always placed in the host model, even when the MEP element originates from a linked file.
+    </p>
+
+    <table class="ui-table">
+      <thead>
+        <tr>
+          <th>Option</th>
+          <th>Revit Category</th>
+          <th>Notes</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="ui-label">Walls</span></td>
+          <td>Walls (Basic, Stacked, Curtain)</td>
+          <td>Supports both structural and architectural walls.</td>
+        </tr>
+        <tr>
+          <td><span class="ui-label">Floors</span></td>
+          <td>Floors</td>
+          <td>Includes structural and architectural floor types.</td>
+        </tr>
+        <tr>
+          <td><span class="ui-label">Ceilings</span></td>
+          <td>Ceilings</td>
+          <td>Compound ceilings supported; in-place ceilings may have limitations.</td>
+        </tr>
+        <tr>
+          <td><span class="ui-label">Beams / Columns</span></td>
+          <td>Structural Framing &amp; Columns</td>
+          <td>Openings are cut as voids; requires compatible family geometry.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="callout warn">
+      <div class="callout-icon">⚠</div>
+      <div><strong>Warning</strong>
+        Enabling <strong>Beams / Columns</strong> may affect structural calculations. Always consult the structural engineer before creating openings in structural framing members.
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 3: OPENING SETTINGS -->
+  <section class="section" id="opening-settings">
+    <h2>3. Opening Settings</h2>
+    <p>Configure how openings are created after clashes are detected.</p>
+
+    <h3>Opening Type</h3>
+    <table class="ui-table">
+      <thead>
+        <tr><th>Option</th><th>Description</th><th>When to Use</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="ui-label">Use Native Openings</span></td>
+          <td>Creates Revit built-in wall/floor openings using the <em>Opening by Face</em> or <em>Shaft Opening</em> tools internally.</td>
+          <td>Standard projects where no sleeve family is required; simpler documentation.</td>
+        </tr>
+        <tr>
+          <td><span class="ui-label">Use Family Sleeves</span></td>
+          <td>Places a user-specified sleeve family at each clash location, sized to match the MEP element plus the defined clearance.</td>
+          <td>Projects requiring fire-stopping sleeves, cast-in inserts, or mechanical sleeves per specification.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>Sleeve Family</h3>
+    <p>
+      Available only when <span class="ui-label">Use Family Sleeves</span> is selected. Click the field to browse and select a loaded sleeve family from the project. The family must be a <strong>face-based</strong> or <strong>wall/floor-based</strong> generic model with a <em>Nominal Diameter</em> or <em>Width × Height</em> parameter for automatic sizing.
+    </p>
+
+    <h3>Added Clearance (mm)</h3>
+    <p>
+      Specifies the additional gap in millimetres added around the MEP element's bounding profile when calculating the opening size.
+    </p>
+    <div class="callout tip">
+      <div class="callout-icon">✅</div>
+      <div><strong>Tip</strong>
+        A clearance of <strong>50 mm</strong> (default) satisfies most fire-stopping and insulation wrap requirements. Verify against your project specification and local building code before changing this value.
+      </div>
+    </div>
+
+    <h3>Merge Overlapping Clashes</h3>
+    <p>
+      When enabled (recommended), adjacent clashes within the same host element whose bounding boxes overlap — accounting for the added clearance — are merged into a single larger opening. This prevents closely-spaced openings that would undermine structural integrity and produce cluttered documentation.
+    </p>
+
+    <h3>Only in Active View</h3>
+    <p>
+      Limits the scan scope to elements visible in the currently active 3D or plan view. Useful for targeted clash resolution in a specific area or zone without processing the entire model.
+    </p>
+
+    <div class="callout note">
+      <div class="callout-icon">ℹ</div>
+      <div><strong>Note</strong>
+        <em>Only in Active View</em> respects Revit's view-specific visibility/graphics overrides and <em>Section Box</em> constraints. Elements hidden by a filter or temporarily hidden in the active view will be excluded from the scan.
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION: RESULTS TABLE -->
+  <section class="section" id="results-table">
+    <h2>Results Table</h2>
+    <p>
+      After running <strong>Scan For Clashes</strong>, the results table on the right side of the dialog lists every detected clash with the following columns:
+    </p>
+    <table class="ui-table">
+      <thead>
+        <tr>
+          <th>Column</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="ui-label">✓</span></td>
+          <td>Row-level checkbox. Uncheck to exclude specific clashes from the <em>Create Openings</em> operation.</td>
+        </tr>
+        <tr>
+          <td><span class="ui-label">MEP Type</span></td>
+          <td>Category of the intersecting MEP element (Pipe, Duct, or Cable Tray).</td>
+        </tr>
+        <tr>
+          <td><span class="ui-label">MEP Source</span></td>
+          <td>Model source: <em>Host Model</em> or the filename of the linked Revit model.</td>
+        </tr>
+        <tr>
+          <td><span class="ui-label">Host Type</span></td>
+          <td>Category of the host element being cut (Wall, Floor, Ceiling, Beam/Column).</td>
+        </tr>
+        <tr>
+          <td><span class="ui-label">Host ID</span></td>
+          <td>Revit Element ID of the host element. Click to zoom and select the element in the model.</td>
+        </tr>
+        <tr>
+          <td><span class="ui-label">Status</span></td>
+          <td>
+            Current opening state:
+            <br/>
+            <span class="status-chip pending">● Pending</span> — clash detected, opening not yet created.
+            <br/>
+            <span class="status-chip done">● Done</span> — opening successfully placed.
+            <br/>
+            <span class="status-chip conflict">● Conflict</span> — opening could not be placed (see Troubleshooting).
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- SECTION: SCAN SUMMARY -->
+  <section class="section" id="scan-summary">
+    <h2>Scan Summary</h2>
+    <p>The <strong>Scan Summary</strong> panel at the bottom of the left pane provides a quick totals report after each scan or opening creation run:</p>
+    <ul>
+      <li><strong>Clashes found</strong> — total number of MEP-to-host intersections detected.</li>
+      <li><strong>Openings done</strong> — total number of openings successfully placed in the current session.</li>
+    </ul>
+  </section>
+
+  <!-- SECTION: WORKFLOW -->
+  <section class="section" id="workflow">
+    <h2>Recommended Workflow</h2>
+
+    <div class="workflow" role="img" aria-label="Workflow: Configure → Scan → Review → Create → Verify">
+      <div class="wf-step">
+        <div class="num">Step 1</div>
+        <div class="label">Configure</div>
+      </div>
+      <div class="wf-arrow">→</div>
+      <div class="wf-step">
+        <div class="num">Step 2</div>
+        <div class="label">Scan</div>
+      </div>
+      <div class="wf-arrow">→</div>
+      <div class="wf-step">
+        <div class="num">Step 3</div>
+        <div class="label">Review</div>
+      </div>
+      <div class="wf-arrow">→</div>
+      <div class="wf-step">
+        <div class="num">Step 4</div>
+        <div class="label">Create</div>
+      </div>
+      <div class="wf-arrow">→</div>
+      <div class="wf-step">
+        <div class="num">Step 5</div>
+        <div class="label">Verify</div>
+      </div>
+    </div>
+
+    <ol class="steps">
+      <li>
+        <div>
+          <strong>Configure selections</strong><br/>
+          Check the required MEP categories (Pipes, Ducts, Cable Trays) and host types (Walls, Floors, etc.). Set the clearance value and choose between Native Openings or Family Sleeves.
+        </div>
+      </li>
+      <li>
+        <div>
+          <strong>Click "Scan For Clashes"</strong><br/>
+          The tool analyses all intersections between selected MEP and host elements across the host model and linked files. Results populate the table on the right.
+        </div>
+      </li>
+      <li>
+        <div>
+          <strong>Review results</strong><br/>
+          Inspect each row. Click a <span class="ui-label">Host ID</span> to navigate to the clash location in the model. Uncheck any rows you wish to exclude.
+        </div>
+      </li>
+      <li>
+        <div>
+          <strong>Click "Create Openings"</strong><br/>
+          The tool places native openings or sleeve families for all checked rows. A Revit transaction is created — use <kbd>Ctrl+Z</kbd> to undo the entire batch if needed.
+        </div>
+      </li>
+      <li>
+        <div>
+          <strong>Verify and document</strong><br/>
+          Check the <em>Status</em> column for any <span class="status-chip conflict">Conflict</span> items. Review the Scan Summary. Save the model and coordinate with the structural discipline.
+        </div>
+      </li>
+    </ol>
+
+    <div class="callout danger">
+      <div class="callout-icon">🚫</div>
+      <div><strong>Important</strong>
+        Always run <strong>Scan For Clashes</strong> again after any MEP routing changes or model reloads to ensure the results table reflects the current model state before creating additional openings.
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION: TROUBLESHOOTING -->
+  <section class="section" id="troubleshooting">
+    <h2>Troubleshooting</h2>
+
+    <h3>No clashes found after scan</h3>
+    <ul>
+      <li>Confirm that at least one MEP category and one host type are checked.</li>
+      <li>Verify that MEP elements and host elements overlap geometrically in 3D. Use a 3D view with a Section Box to inspect intersections.</li>
+      <li>If <em>Only in Active View</em> is checked, ensure the active view's Section Box includes the expected area.</li>
+      <li>Confirm linked models are loaded (status bar reports linked model count).</li>
+    </ul>
+
+    <h3>Status shows "Conflict" after Create Openings</h3>
+    <ul>
+      <li>The host element may be a <strong>non-cuttable</strong> family (e.g., some curtain wall panels). Convert to a cuttable host or use a different opening method.</li>
+      <li>The opening size exceeds the host element's geometric bounds. Reduce the clearance value or split the MEP run.</li>
+      <li>Permissions: you may not have edit access to the workset owning the host element in a workshared model. Request ownership and retry.</li>
+    </ul>
+
+    <h3>Sleeve family not appearing in the dropdown</h3>
+    <ul>
+      <li>Load the sleeve family into the project via <strong>Insert → Load Family</strong> before opening the dialog.</li>
+      <li>Ensure the family category is <em>Generic Model</em>, <em>Mechanical Equipment</em>, or a supported pipe/duct-related category.</li>
+    </ul>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="doc-footer">
+    <div>
+      Was this page helpful?
+      <div class="feedback-btns">
+        <button>👍 Yes</button>
+        <button>👎 No</button>
+      </div>
+    </div>
+    <div>
+      <a href="#">Submit feedback</a> · 
+      <a href="#">View on Community Forum</a> · 
+      <a href="#">Release Notes</a>
+    </div>
+    <div>© 2025 Autodesk, Inc. All rights reserved.</div>
+  </footer>
+
+</main>
+</body>
+</html>
